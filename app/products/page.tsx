@@ -13,19 +13,24 @@ export default function ProductsPage() {
       : products.filter((p) => p.category === activeCategory);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">All Products</h1>
+    <section className="max-w-5xl mx-auto px-6 py-16">
+      <h1 className="text-5xl font-semibold tracking-tight text-ink mb-2 text-center">
+        Store.
+      </h1>
+      <p className="text-xl text-ink-soft mb-10 text-center">
+        The best way to shop the products you love.
+      </p>
 
       {/* Category filter */}
-      <div className="flex flex-wrap gap-2 mb-10">
+      <div className="flex flex-wrap justify-center gap-2 mb-12">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               activeCategory === cat
-                ? "bg-gray-900 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-ink text-white"
+                : "bg-haze text-ink hover:bg-line/50"
             }`}
           >
             {cat}
@@ -40,7 +45,7 @@ export default function ProductsPage() {
       </div>
 
       {filtered.length === 0 && (
-        <p className="text-center text-gray-500 py-16">No products found in this category.</p>
+        <p className="text-center text-ink-soft py-16">No products found in this category.</p>
       )}
     </section>
   );
