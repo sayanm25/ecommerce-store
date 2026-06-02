@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { Product } from "@/lib/products";
+import { useCart } from "@/lib/cart-context";
 
 const badgeColors: Record<string, string> = {
   "Best Seller": "bg-amber-100 text-amber-800",
@@ -8,6 +12,15 @@ const badgeColors: Record<string, string> = {
 };
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = () => {
+    addItem(product);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1200);
+  };
+
   return (
     <div className="group relative flex flex-col rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">
       <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -39,8 +52,15 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="flex items-center justify-between mt-3">
           <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
-          <button className="text-sm font-medium bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition-colors">
-            Add to cart
+          <button
+            onClick={handleAdd}
+            className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
+              added
+                ? "bg-green-600 text-white"
+                : "bg-gray-900 text-white hover:bg-gray-700"
+            }`}
+          >
+            {added ? "Added ✓" : "Add to cart"}
           </button>
         </div>
       </div>
