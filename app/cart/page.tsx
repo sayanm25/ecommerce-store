@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
+import { formatPrice } from "@/lib/currency";
 
-const SHIPPING_THRESHOLD = 75;
-const SHIPPING_COST = 9.99;
+const SHIPPING_THRESHOLD = 4999;
+const SHIPPING_COST = 199;
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotal, totalItems } = useCart();
@@ -68,7 +69,7 @@ export default function CartPage() {
                     </h3>
                   </div>
                   <p className="font-medium text-ink">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatPrice(item.price * item.quantity)}
                   </p>
                 </div>
 
@@ -112,23 +113,23 @@ export default function CartPage() {
             <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-ink-soft">Subtotal</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+                <span className="font-medium">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-ink-soft">Shipping</span>
                 <span className="font-medium">
-                  {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                  {shipping === 0 ? "Free" : formatPrice(shipping)}
                 </span>
               </div>
               {shipping > 0 && (
                 <p className="text-xs text-ink-soft">
-                  Add ${(SHIPPING_THRESHOLD - subtotal).toFixed(2)} more for free
+                  Add {formatPrice(SHIPPING_THRESHOLD - subtotal)} more for free
                   shipping.
                 </p>
               )}
               <div className="border-t border-line mt-2 pt-2 flex justify-between text-base font-semibold text-ink">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formatPrice(total)}</span>
               </div>
             </div>
 
