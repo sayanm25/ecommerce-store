@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
+import { formatPrice } from "@/lib/currency";
 
 const badgeColors: Record<string, string> = {
   "Best Seller": "bg-orange-500 text-white",
@@ -55,7 +56,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         <p className="text-base font-medium text-ink mt-2">
-          ${product.price.toFixed(2)}
+          {formatPrice(product.price)}
         </p>
 
         <button

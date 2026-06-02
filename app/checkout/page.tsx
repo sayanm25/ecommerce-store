@@ -3,9 +3,10 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
+import { formatPrice } from "@/lib/currency";
 
-const SHIPPING_THRESHOLD = 75;
-const SHIPPING_COST = 9.99;
+const SHIPPING_THRESHOLD = 4999;
+const SHIPPING_COST = 199;
 
 export default function CheckoutPage() {
   const { items, subtotal, totalItems, clearCart } = useCart();
@@ -146,7 +147,7 @@ export default function CheckoutPage() {
                     <span className="text-ink-soft">× {item.quantity}</span>
                   </span>
                   <span className="font-medium">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatPrice(item.price * item.quantity)}
                   </span>
                 </div>
               ))}
@@ -155,17 +156,17 @@ export default function CheckoutPage() {
             <div className="border-t border-line pt-4 flex flex-col gap-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-ink-soft">Subtotal</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+                <span className="font-medium">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-ink-soft">Shipping</span>
                 <span className="font-medium">
-                  {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                  {shipping === 0 ? "Free" : formatPrice(shipping)}
                 </span>
               </div>
               <div className="border-t border-line mt-2 pt-2 flex justify-between text-base font-semibold text-ink">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formatPrice(total)}</span>
               </div>
             </div>
 

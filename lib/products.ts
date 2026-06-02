@@ -13,7 +13,7 @@ export const products: Product[] = [
   {
     id: 1,
     name: "Classic Leather Wallet",
-    price: 49.99,
+    price: 3999,
     category: "Accessories",
     image: "https://images.unsplash.com/photo-1627123424574-724758594913?w=400&q=80",
     rating: 4.5,
@@ -23,7 +23,7 @@ export const products: Product[] = [
   {
     id: 2,
     name: "Wireless Noise-Cancelling Headphones",
-    price: 199.99,
+    price: 16999,
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
     rating: 4.8,
@@ -33,7 +33,7 @@ export const products: Product[] = [
   {
     id: 3,
     name: "Minimalist Watch",
-    price: 129.99,
+    price: 10999,
     category: "Accessories",
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
     rating: 4.6,
@@ -42,7 +42,7 @@ export const products: Product[] = [
   {
     id: 4,
     name: "Canvas Tote Bag",
-    price: 34.99,
+    price: 2499,
     category: "Bags",
     image: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&q=80",
     rating: 4.3,
@@ -51,7 +51,7 @@ export const products: Product[] = [
   {
     id: 5,
     name: "Running Sneakers",
-    price: 89.99,
+    price: 7499,
     category: "Footwear",
     image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80",
     rating: 4.7,
@@ -61,7 +61,7 @@ export const products: Product[] = [
   {
     id: 6,
     name: "Ceramic Coffee Mug",
-    price: 24.99,
+    price: 1999,
     category: "Home",
     image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&q=80",
     rating: 4.4,
@@ -70,7 +70,7 @@ export const products: Product[] = [
   {
     id: 7,
     name: "Portable Bluetooth Speaker",
-    price: 79.99,
+    price: 6499,
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80",
     rating: 4.5,
@@ -79,7 +79,7 @@ export const products: Product[] = [
   {
     id: 8,
     name: "Linen Throw Pillow",
-    price: 29.99,
+    price: 2299,
     category: "Home",
     image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&q=80",
     rating: 4.2,

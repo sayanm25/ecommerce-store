@@ -52,7 +52,7 @@ export default function Home() {
       {/* Promo banner */}
       <section className="bg-haze py-20 px-6 text-center">
         <h2 className="text-4xl font-semibold tracking-tight text-ink mb-3">
-          Free shipping on orders over $75.
+          Free shipping on orders over ₹4,999.
         </h2>
         <p className="text-xl text-ink-soft mb-7">
           Use code{" "}
