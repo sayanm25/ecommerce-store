@@ -21,12 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-white text-gray-900">
+      <body className="min-h-full flex flex-col bg-white text-ink">
         <CartProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
-          <footer className="border-t border-gray-200 py-8 text-center text-sm text-gray-500">
-            © 2026 ShopNext. All rights reserved.
+          <footer className="bg-haze border-t border-line py-8 text-center text-xs text-ink-soft">
+            Copyright © 2026 ShopNext Inc. All rights reserved.
           </footer>
         </CartProvider>
       </body>

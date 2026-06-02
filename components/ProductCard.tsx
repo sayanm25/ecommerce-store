@@ -6,9 +6,9 @@ import { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 
 const badgeColors: Record<string, string> = {
-  "Best Seller": "bg-amber-100 text-amber-800",
-  New: "bg-blue-100 text-blue-800",
-  Sale: "bg-red-100 text-red-800",
+  "Best Seller": "bg-orange-500 text-white",
+  New: "bg-brand text-white",
+  Sale: "bg-red-500 text-white",
 };
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -22,8 +22,8 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="group relative flex flex-col rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
+    <div className="group relative flex flex-col rounded-2xl bg-haze overflow-hidden transition-shadow duration-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+      <div className="relative aspect-square overflow-hidden">
         <Image
           src={product.image}
           alt={product.name}
@@ -32,37 +32,42 @@ export default function ProductCard({ product }: { product: Product }) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
         {product.badge && (
-          <span className={`absolute top-3 left-3 text-xs font-semibold px-2 py-1 rounded-full ${badgeColors[product.badge]}`}>
+          <span className={`absolute top-3 left-3 text-[11px] font-medium px-2.5 py-1 rounded-full ${badgeColors[product.badge]}`}>
             {product.badge}
           </span>
         )}
       </div>
 
-      <div className="flex flex-col gap-1 p-4">
-        <p className="text-xs text-gray-500 uppercase tracking-wide">{product.category}</p>
-        <h3 className="font-semibold text-gray-900 leading-snug">{product.name}</h3>
+      <div className="flex flex-col gap-1 p-5 text-center">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide">
+          {product.category}
+        </p>
+        <h3 className="text-lg font-semibold tracking-tight text-ink leading-snug">
+          {product.name}
+        </h3>
 
-        <div className="flex items-center gap-1 mt-1">
-          <div className="flex text-amber-400 text-sm">
+        <div className="flex items-center justify-center gap-1 mt-1">
+          <span className="text-orange-400 text-sm">
             {"★".repeat(Math.round(product.rating))}
             {"☆".repeat(5 - Math.round(product.rating))}
-          </div>
-          <span className="text-xs text-gray-500">({product.reviewCount})</span>
+          </span>
+          <span className="text-xs text-ink-soft">({product.reviewCount})</span>
         </div>
 
-        <div className="flex items-center justify-between mt-3">
-          <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
-          <button
-            onClick={handleAdd}
-            className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
-              added
-                ? "bg-green-600 text-white"
-                : "bg-gray-900 text-white hover:bg-gray-700"
-            }`}
-          >
-            {added ? "Added ✓" : "Add to cart"}
-          </button>
-        </div>
+        <p className="text-base font-medium text-ink mt-2">
+          ${product.price.toFixed(2)}
+        </p>
+
+        <button
+          onClick={handleAdd}
+          className={`mt-3 text-sm font-normal px-5 py-2 rounded-full transition-colors ${
+            added
+              ? "bg-green-600 text-white"
+              : "bg-brand text-white hover:bg-brand-hover"
+          }`}
+        >
+          {added ? "Added ✓" : "Add to Cart"}
+        </button>
       </div>
     </div>
   );
