@@ -4,6 +4,7 @@ import {
   decrypt,
   parseResponseString,
 } from "@/lib/sabpaisa";
+import { getOrder, markOrderPaid, markOrderFailed } from "@/lib/orders";
 
 /**
  * POST /api/payment/callback
@@ -43,15 +44,30 @@ export async function POST(request: Request) {
     const decrypted = decrypt(encResponse, config.authKey, config.authIv);
     const result = parseResponseString(decrypted);
 
-    // TODO: look up the pending order by result.clientTxnId, verify the
-    // amount matches, and mark it paid/failed in your datastore here.
+    // Reconcile against the pending order: the gateway must report SUCCESS
+    // AND the paid amount must match what we recorded at initiation.
+    const order = result.clientTxnId ? getOrder(result.clientTxnId) : undefined;
+    const paidAmount = result.amount ? Number(result.amount) : NaN;
+    const amountMatches =
+      !!order && Math.round(paidAmount) === Math.round(order.amount);
+    const success = result.status === "SUCCESS" && amountMatches;
 
-    const success = result.status === "SUCCESS";
+    if (result.clientTxnId) {
+      if (success) {
+        markOrderPaid(result.clientTxnId, result.sabpaisaTxnId);
+      } else {
+        markOrderFailed(result.clientTxnId);
+      }
+    }
+
     const params = new URLSearchParams({
       status: success ? "success" : "failed",
       txn: result.sabpaisaTxnId || result.clientTxnId || "",
       gateway_status: result.status,
     });
+    if (result.status === "SUCCESS" && !amountMatches) {
+      params.set("reason", "amount_mismatch");
+    }
 
     return NextResponse.redirect(
       `${base}/checkout/result?${params.toString()}`,

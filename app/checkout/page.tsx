@@ -4,9 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/currency";
-
-const SHIPPING_THRESHOLD = 4999;
-const SHIPPING_COST = 199;
+import { shippingFor } from "@/lib/pricing";
 
 /** Auto-submit a hidden POST form to the payment gateway. */
 function postToGateway(url: string, fields: Record<string, string>) {
@@ -31,8 +29,7 @@ export default function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
 
-  const shipping =
-    subtotal === 0 || subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const shipping = shippingFor(subtotal);
   const total = subtotal + shipping;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -49,7 +46,13 @@ export default function CheckoutPage() {
       const res = await fetch("/api/payment/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: total, name, email, mobile }),
+        body: JSON.stringify({
+          // Send only ids + quantities; the server recomputes the price.
+          items: items.map((i) => ({ id: i.id, quantity: i.quantity })),
+          name,
+          email,
+          mobile,
+        }),
       });
 
       // Gateway not configured yet → demo confirmation fallback.
