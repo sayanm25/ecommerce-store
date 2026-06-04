@@ -66,6 +66,10 @@ Checkout is wired for the [SabPaisa](https://sabpaisa.in/) payment gateway using
 the server-side encrypted-redirect flow. **Until credentials are added the app
 runs in demo mode** (the checkout shows a confirmation without taking a payment).
 
+> 📖 **New to payment integration?** See [PAYMENTS.md](PAYMENTS.md) for a tour of
+> the common pain points and a **mock gateway** that runs the whole payment loop
+> locally — no real credentials or public URL required.
+
 ### Setup
 
 1. Copy the env template and fill in your SabPaisa credentials:
