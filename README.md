@@ -39,6 +39,8 @@ lib/
   products.ts       # Product data + category helpers
   cart-context.tsx  # Cart state (localStorage-backed)
   currency.ts       # INR price formatting
+  pricing.ts        # Authoritative totals + shipping rules
+  orders.ts         # Pending-order store (server only)
   sabpaisa.ts       # Payment gateway helper (server only)
 ```
 
@@ -79,19 +81,25 @@ runs in demo mode** (the checkout shows a confirmation without taking a payment)
 
 | Step | Where | What happens |
 | ---- | ----- | ------------ |
-| 1 | `app/checkout/page.tsx` | POSTs order details to the initiate route |
-| 2 | `app/api/payment/initiate/route.ts` | Builds + AES-encrypts the request → `encData` |
+| 1 | `app/checkout/page.tsx` | POSTs cart line items (ids + quantities) to the initiate route |
+| 2 | `app/api/payment/initiate/route.ts` | Recomputes the total server-side, records a pending order, AES-encrypts the request → `encData` |
 | 3 | browser | Auto-submits `{ clientCode, encData }` to SabPaisa's hosted page |
-| 4 | `app/api/payment/callback/route.ts` | Decrypts SabPaisa's `encResponse`, reads status |
+| 4 | `app/api/payment/callback/route.ts` | Decrypts `encResponse`, reconciles against the pending order (status **and** amount), marks it paid/failed |
 | 5 | `app/checkout/result/page.tsx` | Shows success/failure, clears cart on success |
 
-All crypto + request/response building lives in `lib/sabpaisa.ts` (server only).
+Crypto + request/response building lives in `lib/sabpaisa.ts`; price calculation
+in `lib/pricing.ts`; the pending-order store in `lib/orders.ts` (all server only).
+
+The order total is computed **server-side from the product catalog** — the client
+only sends ids and quantities, so a tampered price can't get through. The callback
+also verifies the paid amount matches the recorded order.
 
 > ⚠️ **Verify against your SabPaisa integration kit.** Field names, the exact
 > gateway URL, response key names, and the encryption key size vary by version —
-> these are marked with `TODO` / `NOTE` comments in the code. Also note the
-> `TODO(security)` in the initiate route: recompute the order total server-side
-> rather than trusting the client-sent amount.
+> these are marked with `TODO` / `NOTE` comments in the code.
+>
+> **Before production:** `lib/orders.ts` uses an in-memory store (lost on restart,
+> not shared across serverless instances) — swap it for a real datastore.
 
 ## Deploy
 

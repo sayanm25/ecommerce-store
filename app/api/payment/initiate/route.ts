@@ -5,17 +5,22 @@ import {
   encrypt,
   newClientTxnId,
 } from "@/lib/sabpaisa";
+import { computeTotals, CartLine } from "@/lib/pricing";
+import { createPendingOrder } from "@/lib/orders";
 
 /**
  * POST /api/payment/initiate
  *
- * Body: { amount: number, name: string, email: string, mobile: string }
+ * Body: {
+ *   items: { id: number, quantity: number }[],
+ *   name: string, email: string, mobile: string
+ * }
  *
- * Returns the data the browser needs to POST to SabPaisa:
- *   { gatewayUrl, clientCode, encData, clientTxnId }
+ * Returns { gatewayUrl, clientCode, encData, clientTxnId } for the
+ * browser to POST to SabPaisa. The order total is recomputed here from
+ * the catalog — the client never gets to set the price.
  *
- * If credentials are not configured, returns 503 so the client can
- * fall back to the demo confirmation flow.
+ * Returns 503 when credentials aren't configured (demo fallback).
  */
 export async function POST(request: Request) {
   const config = getSabPaisaConfig();
@@ -27,7 +32,7 @@ export async function POST(request: Request) {
   }
 
   let body: {
-    amount?: number;
+    items?: CartLine[];
     name?: string;
     email?: string;
     mobile?: string;
@@ -38,19 +43,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const { amount, name, email, mobile } = body;
-  if (!amount || amount <= 0 || !name || !email || !mobile) {
+  const { items, name, email, mobile } = body;
+  if (!Array.isArray(items) || items.length === 0 || !name || !email || !mobile) {
     return NextResponse.json({ error: "missing_fields" }, { status: 400 });
   }
 
-  // TODO(security): do NOT trust the amount from the client. In a real
-  // integration, recompute the order total server-side from the cart's
-  // product IDs (and persist a pending order) before encrypting.
+  // Authoritative, server-side total. Rejects unknown product ids.
+  let total: number;
+  try {
+    total = computeTotals(items).total;
+  } catch {
+    return NextResponse.json({ error: "invalid_items" }, { status: 400 });
+  }
+  if (total <= 0) {
+    return NextResponse.json({ error: "empty_order" }, { status: 400 });
+  }
+
   const clientTxnId = newClientTxnId();
+  createPendingOrder(clientTxnId, total);
 
   const requestString = buildRequestString(config, {
     clientTxnId,
-    amount,
+    amount: total,
     payerName: name,
     payerEmail: email,
     payerMobile: mobile,

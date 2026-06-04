@@ -4,15 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/currency";
-
-const SHIPPING_THRESHOLD = 4999;
-const SHIPPING_COST = 199;
+import { shippingFor, SHIPPING_THRESHOLD } from "@/lib/pricing";
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotal, totalItems } = useCart();
 
-  const shipping =
-    subtotal === 0 || subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const shipping = shippingFor(subtotal);
   const total = subtotal + shipping;
 
   if (items.length === 0) {
